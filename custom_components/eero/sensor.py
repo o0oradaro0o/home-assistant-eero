@@ -212,6 +212,12 @@ SENSOR_DESCRIPTIONS: list[EeroSensorEntityDescription] = [
         name="Public IP",
     ),
     EeroSensorEntityDescription(
+        key="source_location",
+        name="Connected To",
+        device_class=SensorDeviceClass.ENUM,
+        wireless_only=True,
+    ),
+    EeroSensorEntityDescription(
         key="signal",
         name="Signal Strength",
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
@@ -389,6 +395,12 @@ async def async_setup_entry(
 
 class EeroSensorEntity(EeroEntity, SensorEntity):
     """Representation of an Eero sensor entity."""
+    @property
+    def options(self) -> list[str] | None:
+        """Return a list of available options."""
+        if self.entity_description.key == "source_location":
+            return sorted([eero.name for eero in self.network.eeros if eero.name])
+        return self.entity_description.options
 
     @property
     def native_value(self) -> StateType | datetime:
