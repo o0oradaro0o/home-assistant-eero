@@ -405,7 +405,12 @@ class EeroSensorEntity(EeroEntity, SensorEntity):
     @property
     def native_value(self) -> StateType | datetime:
         """Return the value reported by the sensor."""
-        return self.entity_description.native_value(self.resource, self.entity_description.key)
+        try:
+            return self.entity_description.native_value(
+                self.resource, self.entity_description.key
+            )
+        except (AttributeError, IndexError, KeyError, TypeError):
+            return None
 
     @property
     def native_unit_of_measurement(self) -> str | None:

@@ -162,7 +162,7 @@ class EeroBinarySensorEntity(EeroEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool | None:
         """Return true if the binary sensor is on."""
-        return getattr(self.resource, self.entity_description.key)
+        return getattr(self.resource, self.entity_description.key, None)
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
